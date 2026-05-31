@@ -2,6 +2,7 @@ import streamlit as st
 
 from agent import run_agent_cycle
 from config import create_client, get_api_key
+from live_data import fetch_live_matches_from_google
 from ui import inject_styles, init_session_state, render_main, render_sidebar
 
 api_key = get_api_key()
@@ -28,6 +29,12 @@ init_session_state()
 
 sim_score, sim_over, sim_pitch, sim_target, show_match_state = render_sidebar()
 
+@st.cache_data(ttl=300)
+def load_live_matches():
+    return fetch_live_matches_from_google()
+
+live_matches = load_live_matches()
+
 match_state = {
     "score": sim_score,
     "over": f"{sim_over:.1f}",
@@ -37,7 +44,7 @@ match_state = {
     "bench_available": ["p_chahal", "r_ashwin", "m_shami"],
 }
 
-run_requested = render_main(match_state, show_match_state)
+run_requested = render_main(match_state, show_match_state, live_matches)
 
 if run_requested:
     st.session_state.latest_trade = None

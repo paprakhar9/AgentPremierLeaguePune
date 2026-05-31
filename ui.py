@@ -21,6 +21,24 @@ def init_session_state():
         st.session_state.agent_summary = None
 
 
+def render_live_matches_bar(live_matches):
+    if live_matches:
+        columns = st.columns(len(live_matches), gap="large")
+        for column, match in zip(columns, live_matches):
+            column.markdown(
+                f"""
+                <div style='background:#12161f; padding:14px 16px; border-radius:12px; border:1px solid #2d3139; min-height:120px;'>
+                    <div style='font-size:0.85rem; color:#a5acb8; margin-bottom:6px;'>{match['status']}</div>
+                    <div style='font-size:1.05rem; font-weight:700; margin-bottom:6px;'>{match['team_a']} vs {match['team_b']}</div>
+                    <div style='font-size:0.98rem; color:#e3eaf7;'>{match.get('score', 'N/A')}</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+    else:
+        st.info("No live matches currently. Check back later.")
+
+
 def render_sidebar():
     st.sidebar.title("🎮 Live Match Telemetry")
     st.sidebar.markdown(
@@ -54,7 +72,8 @@ def render_sidebar():
     return sim_score, sim_over, sim_pitch, sim_target, show_match_state
 
 
-def render_main(match_state, show_match_state):
+def render_main(match_state, show_match_state, live_matches):
+    render_live_matches_bar(live_matches)
     st.title("⚡ Agentic Premier League: Autonomous Fantasy Engine")
     st.markdown(
         "Use the dashboard to simulate a live match decision, then let the autonomous agent determine whether a substitution improves the chase."

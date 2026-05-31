@@ -16,6 +16,7 @@ Built for the **Agentic Premier League (APL)**, this project is an autonomous fa
 ## 🛠️ Tech Stack
 * **Core AI:** `google-genai` (Gemini 2.5 Flash)
 * **Interface:** `streamlit`
+* **Live Data:** `requests`, `beautifulsoup4` for Google search scraping
 * **Environment:** GitHub Codespaces
 
 ## ⚙️ Quick Start (GitHub Codespaces)
@@ -23,4 +24,17 @@ Built for the **Agentic Premier League (APL)**, this project is an autonomous fa
 1. **Set your API Key:**
    Add your Gemini API key to your GitHub repository secrets as `GEMINI_API_KEY`. Alternatively, export it directly in your terminal:
 ```bash
-   export GEMINI_API_KEY="your_api_key_here"
+export GEMINI_API_KEY="your_api_key_here"
+```
+
+2. **Install dependencies:**
+```bash
+pip install streamlit requests beautifulsoup4 google-genai
+```
+
+3. **Run the app:**
+```bash
+streamlit run app.py
+```
+
+The live data section now attempts to fetch current cricket score cards from Google search. If Google access is blocked, the dashboard falls back to a friendly empty state message.
