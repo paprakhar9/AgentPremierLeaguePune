@@ -1,33 +1,47 @@
 import streamlit as st
-import json
-from google import genai
-from google.genai import types
 
-client = genai.Client()
+from agent import run_agent_cycle
+from config import create_client, get_api_key
+from ui import inject_styles, init_session_state, render_main, render_sidebar
 
-def execute_player_trade(current_player: str, new_player: str, logic: str) -> str:
-    st.success(f"TRADE EXECUTED: Swapped {current_player} for {new_player}")
-    st.info(f"AGENT LOGIC: {logic}")
-    return "Trade processed successfully."
+api_key = get_api_key()
+if not api_key:
+    st.error(
+        "Missing Gemini API key. Set GOOGLE_API_KEY, GEMINI_API_KEY, GENAI_API_KEY, or OPENAI_API_KEY in the environment or add a .env file to the repository."
+    )
+    st.stop()
 
-st.title("🤖 Autonomous Fantasy Manager")
+client = create_client(api_key)
 
-# Load the mock live data
-with open('live_match_state.json', 'r') as f:
-    match_data = json.load(f)
-    
-st.write("### Live Match Feed", match_data)
+# -----------------------------------------------------------------------------
+# 1. Page Configuration & Styling
+# -----------------------------------------------------------------------------
+st.set_page_config(
+    page_title="APL | Autonomous Fantasy Manager",
+    page_icon="🏏",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-if st.button("Run Manager Analysis"):
-    with st.spinner("Agent is reasoning..."):
-        chat = client.chats.create(
-            model="gemini-2.5-flash",
-            config=types.GenerateContentConfig(
-                system_instruction="You are an autonomous fantasy cricket manager...",
-                tools=[execute_player_trade], 
-                temperature=0.2,
-            )
-        )
-        response = chat.send_message(str(match_data))
-        st.write("### Agent Conclusion")
-        st.write(response.text)
+inject_styles()
+init_session_state()
+
+sim_score, sim_over, sim_pitch, sim_target, show_match_state = render_sidebar()
+
+match_state = {
+    "score": sim_score,
+    "over": f"{sim_over:.1f}",
+    "pitch_condition": sim_pitch,
+    "projected_target": sim_target,
+    "current_squad_bowling_next": "p_siraj",
+    "bench_available": ["p_chahal", "r_ashwin", "m_shami"],
+}
+
+run_requested = render_main(match_state, show_match_state)
+
+if run_requested:
+    st.session_state.latest_trade = None
+    st.session_state.agent_summary = None
+
+    with st.spinner("Analyzing match conditions and bench strength..."):
+        st.session_state.agent_summary = run_agent_cycle(client, match_state)
