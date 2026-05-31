@@ -51,6 +51,12 @@ def render_sidebar():
         st.write("3. Review the reasoning and transaction output.")
         st.write("4. Optionally inspect the raw match state below.")
 
+    st.sidebar.markdown("**New to cricket? These terms are explained in simple language:**")
+    st.sidebar.markdown("- **Current Score**: runs/wickets. Example `142/5` means 142 runs and 5 wickets lost.")
+    st.sidebar.markdown("- **Current Over**: one over is 6 balls. Example `15.2` means 15 overs plus 2 balls.")
+    st.sidebar.markdown("- **Pitch State**: how the field is playing, which affects batting or bowling.")
+    st.sidebar.markdown("- **Target / Projected Score**: the score the batting team is trying to reach.")
+
     sim_score = st.sidebar.text_input("Current Score", "142/5")
     sim_over = st.sidebar.slider("Current Over", min_value=0.1, max_value=20.0, value=15.2, step=0.1)
     sim_pitch = st.sidebar.selectbox(
@@ -77,6 +83,12 @@ def render_main(match_state, show_match_state, live_matches):
     st.title("⚡ Agentic Premier League: Autonomous Fantasy Engine")
     st.markdown(
         "Use the dashboard to simulate a live match decision, then let the autonomous agent determine whether a substitution improves the chase."
+    )
+    st.markdown(
+        "If you are not familiar with cricket, the inputs below are simple match values that the agent uses to decide whether a substitution is helpful."
+    )
+    st.info(
+        "Current Score is runs/wickets, Over shows how many 6-ball sets have been bowled, Pitch Condition describes the field, and Target is the score the batting team wants to reach."
     )
     st.markdown("---")
 
