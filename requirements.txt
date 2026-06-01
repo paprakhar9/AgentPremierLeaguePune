@@ -1,6 +1,5 @@
 streamlit
 google-genai
-pyteststreamlit
 requests
 beautifulsoup4
-google-genai
+pytest
