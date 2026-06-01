@@ -8,24 +8,6 @@ def inject_styles():
         .metric-container { background-color: #1e222b; padding: 16px; border-radius: 12px; border-left: 6px solid #ff4b4b; }
         .agent-box { background-color: #12161f; padding: 22px; border-radius: 14px; border: 1px solid #2d3139; }
         .small-muted { color: #a5acb8; font-size: 0.95rem; }
-        
-        /* Loading screen animations */
-        @keyframes bat-swing {
-            0% { transform: rotate(-45deg); }
-            50% { transform: rotate(45deg); }
-            100% { transform: rotate(-45deg); }
-        }
-        
-        @keyframes ball-motion {
-            0% { transform: translateX(-80px) translateY(0); opacity: 1; }
-            50% { transform: translateX(0) translateY(-50px); opacity: 1; }
-            100% { transform: translateX(80px) translateY(0); opacity: 0.3; }
-        }
-        
-        @keyframes dot-pulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
         </style>
         """,
         unsafe_allow_html=True,
@@ -33,32 +15,33 @@ def inject_styles():
 
 
 def render_loading_screen():
-    """Display an animated loading screen with cricket bat and ball."""
-    # Create a centered container with columns
+    """Display an animated loading screen with cricket bat and ball using native Streamlit components."""
+    import time
+    
     col1, col2, col3 = st.columns([1, 2, 1])
     
     with col2:
+        # Title
         st.markdown(
-            """
-            <div style="text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%); border-radius: 12px;">
-                <h1 style="color: #e3eaf7; margin: 0; font-size: 2.5rem;">🏏 Agentic Premier League</h1>
-                <p style="color: #a5acb8; font-size: 1.1rem; margin: 1rem 0;">Autonomous Fantasy Cricket Manager</p>
-                
-                <div style="margin: 2rem 0; min-height: 150px; display: flex; align-items: center; justify-content: center;">
-                    <div style="font-size: 3rem; animation: bat-swing 1.2s ease-in-out infinite; transform-origin: right center;">🏏</div>
-                    <div style="font-size: 2rem; margin: 0 1rem; animation: ball-motion 1.2s ease-in-out infinite;">🔴</div>
-                </div>
-                
-                <p style="color: #a5acb8; font-size: 1.1rem; margin: 0;">
-                    Initializing agent
-                    <span style="display: inline-flex; gap: 0.5rem; margin-left: 0.5rem; vertical-align: middle;">
-                        <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #ff4b4b; animation: dot-pulse 1.4s ease-in-out infinite; display: inline-block;"></span>
-                        <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #ff4b4b; animation: dot-pulse 1.4s ease-in-out infinite 0.2s; display: inline-block;"></span>
-                        <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #ff4b4b; animation: dot-pulse 1.4s ease-in-out infinite 0.4s; display: inline-block;"></span>
-                    </span>
-                </p>
-            </div>
-            """,
+            '<h1 style="text-align: center; color: #e3eaf7; font-size: 2.2rem; margin: 1rem 0;">🏏 Agentic Premier League</h1>',
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            '<p style="text-align: center; color: #a5acb8; font-size: 1.1rem; margin: 0.5rem 0;">Autonomous Fantasy Cricket Manager</p>',
+            unsafe_allow_html=True,
+        )
+        
+        # Use native spinner (always works in Streamlit)
+        with st.spinner(""):
+            # Create animated cricket emoji sequence
+            st.markdown(
+                '<div style="text-align: center; font-size: 2.5rem; margin: 2rem 0;">🏏  🔴  🏏  🔴  🏏</div>',
+                unsafe_allow_html=True,
+            )
+        
+        # Loading message
+        st.markdown(
+            '<p style="text-align: center; color: #a5acb8; font-size: 1.1rem;">Initializing agent<span style="animation: none;">...</span></p>',
             unsafe_allow_html=True,
         )
 
