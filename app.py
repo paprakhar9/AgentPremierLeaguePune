@@ -3,7 +3,7 @@ import streamlit as st
 from agent import run_agent_cycle
 from config import create_client, get_api_key
 from live_data import fetch_live_matches_from_google
-from ui import inject_styles, init_session_state, render_main, render_sidebar
+from ui import inject_styles, init_session_state, render_loading_screen, render_main, render_sidebar
 
 api_key = get_api_key()
 if not api_key:
@@ -26,6 +26,18 @@ st.set_page_config(
 
 inject_styles()
 init_session_state()
+
+# Show loading screen on first run
+if "page_loaded" not in st.session_state:
+    loading_placeholder = st.empty()
+    with loading_placeholder.container():
+        render_loading_screen()
+    
+    # Simulate brief loading time and clear
+    import time
+    time.sleep(1.5)
+    loading_placeholder.empty()
+    st.session_state.page_loaded = True
 
 sim_score, sim_over, sim_pitch, sim_target, show_match_state = render_sidebar()
 

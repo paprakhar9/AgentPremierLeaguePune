@@ -8,7 +8,131 @@ def inject_styles():
         .metric-container { background-color: #1e222b; padding: 16px; border-radius: 12px; border-left: 6px solid #ff4b4b; }
         .agent-box { background-color: #12161f; padding: 22px; border-radius: 14px; border: 1px solid #2d3139; }
         .small-muted { color: #a5acb8; font-size: 0.95rem; }
+        
+        /* Loading screen styles */
+        .loading-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            gap: 2rem;
+        }
+        .loading-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #e3eaf7;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .loading-subtitle {
+            font-size: 1.1rem;
+            color: #a5acb8;
+            text-align: center;
+        }
+        
+        /* Cricket animation */
+        .cricket-animation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            min-height: 200px;
+        }
+        .bat {
+            font-size: 3rem;
+            animation: bat-swing 1.2s ease-in-out infinite;
+            transform-origin: 100% 50%;
+        }
+        .ball {
+            font-size: 2rem;
+            animation: ball-motion 1.2s ease-in-out infinite;
+        }
+        
+        @keyframes bat-swing {
+            0% {
+                transform: rotate(-45deg);
+            }
+            50% {
+                transform: rotate(45deg);
+            }
+            100% {
+                transform: rotate(-45deg);
+            }
+        }
+        
+        @keyframes ball-motion {
+            0% {
+                transform: translateX(-100px) translateY(0);
+                opacity: 1;
+            }
+            50% {
+                transform: translateX(0) translateY(-60px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(100px) translateY(0);
+                opacity: 0.3;
+            }
+        }
+        
+        .loading-dots {
+            display: inline-flex;
+            gap: 0.3rem;
+        }
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #ff4b4b;
+            animation: dot-pulse 1.4s ease-in-out infinite;
+        }
+        .dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        .dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes dot-pulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
         </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_loading_screen():
+    """Display an animated loading screen with cricket bat and ball."""
+    st.markdown(
+        """
+        <div class="loading-container">
+            <div class="loading-title">🏏 Agentic Premier League</div>
+            <div class="loading-subtitle">Autonomous Fantasy Cricket Manager</div>
+            
+            <div class="cricket-animation">
+                <div class="bat">🏏</div>
+                <div class="ball">🔴</div>
+            </div>
+            
+            <div class="loading-subtitle">
+                Initializing agent
+                <div class="loading-dots">
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                    <div class="dot"></div>
+                </div>
+            </div>
+        </div>
         """,
         unsafe_allow_html=True,
     )
