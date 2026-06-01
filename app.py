@@ -27,17 +27,13 @@ st.set_page_config(
 inject_styles()
 init_session_state()
 
-# Show loading screen on first run
+# Show loading screen on first run, then proceed to main app
 if "page_loaded" not in st.session_state:
-    loading_placeholder = st.empty()
-    with loading_placeholder.container():
-        render_loading_screen()
-    
-    # Simulate brief loading time and clear
+    render_loading_screen()
+    st.session_state.page_loaded = True
     import time
     time.sleep(1.5)
-    loading_placeholder.empty()
-    st.session_state.page_loaded = True
+    st.rerun()
 
 sim_score, sim_over, sim_pitch, sim_target, show_match_state = render_sidebar()
 

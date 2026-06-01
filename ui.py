@@ -15,21 +15,22 @@ def inject_styles():
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            padding: 4rem 2rem;
             background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            border-radius: 12px;
             gap: 2rem;
+            text-align: center;
         }
         .loading-title {
             font-size: 2.5rem;
             font-weight: 700;
             color: #e3eaf7;
-            margin-bottom: 1rem;
-            text-align: center;
+            margin: 0;
         }
         .loading-subtitle {
             font-size: 1.1rem;
             color: #a5acb8;
-            text-align: center;
+            margin: 0;
         }
         
         /* Cricket animation */
@@ -38,55 +39,46 @@ def inject_styles():
             align-items: center;
             justify-content: center;
             gap: 1rem;
-            min-height: 200px;
+            height: 200px;
+            width: 100%;
         }
         .bat {
             font-size: 3rem;
+            display: inline-block;
             animation: bat-swing 1.2s ease-in-out infinite;
-            transform-origin: 100% 50%;
+            transform-origin: right center;
         }
         .ball {
             font-size: 2rem;
+            display: inline-block;
             animation: ball-motion 1.2s ease-in-out infinite;
         }
         
         @keyframes bat-swing {
-            0% {
-                transform: rotate(-45deg);
-            }
-            50% {
-                transform: rotate(45deg);
-            }
-            100% {
-                transform: rotate(-45deg);
-            }
+            0% { transform: rotate(-45deg); }
+            50% { transform: rotate(45deg); }
+            100% { transform: rotate(-45deg); }
         }
         
         @keyframes ball-motion {
-            0% {
-                transform: translateX(-100px) translateY(0);
-                opacity: 1;
-            }
-            50% {
-                transform: translateX(0) translateY(-60px);
-                opacity: 1;
-            }
-            100% {
-                transform: translateX(100px) translateY(0);
-                opacity: 0.3;
-            }
+            0% { transform: translateX(-100px) translateY(0); opacity: 1; }
+            50% { transform: translateX(0) translateY(-60px); opacity: 1; }
+            100% { transform: translateX(100px) translateY(0); opacity: 0.3; }
         }
         
         .loading-dots {
             display: inline-flex;
-            gap: 0.3rem;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 0.5rem;
         }
         .dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background-color: #ff4b4b;
             animation: dot-pulse 1.4s ease-in-out infinite;
+            display: inline-block;
         }
         .dot:nth-child(2) {
             animation-delay: 0.2s;
@@ -96,14 +88,8 @@ def inject_styles():
         }
         
         @keyframes dot-pulse {
-            0%, 100% {
-                opacity: 0.3;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
         }
         </style>
         """,
