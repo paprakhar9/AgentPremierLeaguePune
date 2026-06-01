@@ -9,51 +9,7 @@ def inject_styles():
         .agent-box { background-color: #12161f; padding: 22px; border-radius: 14px; border: 1px solid #2d3139; }
         .small-muted { color: #a5acb8; font-size: 0.95rem; }
         
-        /* Loading screen styles */
-        .loading-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 4rem 2rem;
-            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
-            border-radius: 12px;
-            gap: 2rem;
-            text-align: center;
-        }
-        .loading-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #e3eaf7;
-            margin: 0;
-        }
-        .loading-subtitle {
-            font-size: 1.1rem;
-            color: #a5acb8;
-            margin: 0;
-        }
-        
-        /* Cricket animation */
-        .cricket-animation {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            height: 200px;
-            width: 100%;
-        }
-        .bat {
-            font-size: 3rem;
-            display: inline-block;
-            animation: bat-swing 1.2s ease-in-out infinite;
-            transform-origin: right center;
-        }
-        .ball {
-            font-size: 2rem;
-            display: inline-block;
-            animation: ball-motion 1.2s ease-in-out infinite;
-        }
-        
+        /* Loading screen animations */
         @keyframes bat-swing {
             0% { transform: rotate(-45deg); }
             50% { transform: rotate(45deg); }
@@ -61,30 +17,9 @@ def inject_styles():
         }
         
         @keyframes ball-motion {
-            0% { transform: translateX(-100px) translateY(0); opacity: 1; }
-            50% { transform: translateX(0) translateY(-60px); opacity: 1; }
-            100% { transform: translateX(100px) translateY(0); opacity: 0.3; }
-        }
-        
-        .loading-dots {
-            display: inline-flex;
-            gap: 0.5rem;
-            justify-content: center;
-            margin-top: 0.5rem;
-        }
-        .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background-color: #ff4b4b;
-            animation: dot-pulse 1.4s ease-in-out infinite;
-            display: inline-block;
-        }
-        .dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        .dot:nth-child(3) {
-            animation-delay: 0.4s;
+            0% { transform: translateX(-80px) translateY(0); opacity: 1; }
+            50% { transform: translateX(0) translateY(-50px); opacity: 1; }
+            100% { transform: translateX(80px) translateY(0); opacity: 0.3; }
         }
         
         @keyframes dot-pulse {
@@ -99,29 +34,33 @@ def inject_styles():
 
 def render_loading_screen():
     """Display an animated loading screen with cricket bat and ball."""
-    st.markdown(
-        """
-        <div class="loading-container">
-            <div class="loading-title">🏏 Agentic Premier League</div>
-            <div class="loading-subtitle">Autonomous Fantasy Cricket Manager</div>
-            
-            <div class="cricket-animation">
-                <div class="bat">🏏</div>
-                <div class="ball">🔴</div>
-            </div>
-            
-            <div class="loading-subtitle">
-                Initializing agent
-                <div class="loading-dots">
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                    <div class="dot"></div>
+    # Create a centered container with columns
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    with col2:
+        st.markdown(
+            """
+            <div style="text-align: center; padding: 4rem 2rem; background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%); border-radius: 12px;">
+                <h1 style="color: #e3eaf7; margin: 0; font-size: 2.5rem;">🏏 Agentic Premier League</h1>
+                <p style="color: #a5acb8; font-size: 1.1rem; margin: 1rem 0;">Autonomous Fantasy Cricket Manager</p>
+                
+                <div style="margin: 2rem 0; min-height: 150px; display: flex; align-items: center; justify-content: center;">
+                    <div style="font-size: 3rem; animation: bat-swing 1.2s ease-in-out infinite; transform-origin: right center;">🏏</div>
+                    <div style="font-size: 2rem; margin: 0 1rem; animation: ball-motion 1.2s ease-in-out infinite;">🔴</div>
                 </div>
+                
+                <p style="color: #a5acb8; font-size: 1.1rem; margin: 0;">
+                    Initializing agent
+                    <span style="display: inline-flex; gap: 0.5rem; margin-left: 0.5rem; vertical-align: middle;">
+                        <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #ff4b4b; animation: dot-pulse 1.4s ease-in-out infinite; display: inline-block;"></span>
+                        <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #ff4b4b; animation: dot-pulse 1.4s ease-in-out infinite 0.2s; display: inline-block;"></span>
+                        <span style="width: 10px; height: 10px; border-radius: 50%; background-color: #ff4b4b; animation: dot-pulse 1.4s ease-in-out infinite 0.4s; display: inline-block;"></span>
+                    </span>
+                </p>
             </div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+            """,
+            unsafe_allow_html=True,
+        )
 
 
 def init_session_state():
