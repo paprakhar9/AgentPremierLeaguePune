@@ -80,16 +80,24 @@ def main() -> None:
                 # Inject current state into tools module
                 set_worker_state(current_state)
 
-                # Run the agent cycle
-                analysis = run_agent_cycle(client, current_state["live_telemetry"])
-                logger.info(f"Agent analysis: {analysis[:100]}...")
-
+                # Run the agent cycle with localized error handling so the
+                # worker does not crash from transient LLM/API errors.
+                try:
+                    analysis = run_agent_cycle(client, current_state["live_telemetry"])
+                    logger.info(f"Agent analysis: {analysis[:100]}...")
+                except Exception as e:
+                    logger.error(f"Agent cycle failed (continuing): {e}", exc_info=True)
             else:
                 logger.debug("No telemetry change. Skipping agent cycle.")
 
             # Persist the state (including any trades from agent execution)
             current_state["last_run"] = datetime.now().isoformat()
-            save_state(current_state)
+            try:
+                saved_ok = save_state(current_state)
+                if not saved_ok:
+                    logger.warning("save_state returned False; state may not have been persisted")
+            except Exception as e:
+                logger.error(f"Failed to persist state: {e}", exc_info=True)
 
             # Calculate sleep duration to maintain polling interval
             elapsed: float = time.time() - cycle_start
@@ -105,14 +113,19 @@ def main() -> None:
     except KeyboardInterrupt:
         logger.info("Worker interrupted by user. Gracefully shutting down.")
         current_state["last_run"] = datetime.now().isoformat()
-        save_state(current_state)
+        try:
+            save_state(current_state)
+        except Exception:
+            logger.exception("Failed to persist state during shutdown")
         logger.info("State persisted. Goodbye.")
     except Exception as e:
-        logger.error(f"Unexpected error in main loop: {e}", exc_info=True)
-        current_state["last_run"] = datetime.now().isoformat()
-        save_state(current_state)
-        logger.error("State persisted on error. Re-raising exception.")
-        raise
+        logger.error(f"Unexpected startup error in worker: {e}", exc_info=True)
+        # Persist whatever state we have and exit; do not re-raise to avoid crashing supervisors
+        try:
+            current_state["last_run"] = datetime.now().isoformat()
+            save_state(current_state)
+        except Exception:
+            logger.exception("Failed to persist state after startup error")
 
 
 if __name__ == "__main__":

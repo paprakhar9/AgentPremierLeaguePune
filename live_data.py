@@ -49,7 +49,15 @@ STATUS_PATTERN = re.compile(r"\b(Live|LIVE|In Progress|Inning|stumps|Scheduled|F
 TEAM_VS_PATTERN = re.compile(r"([A-Z][A-Za-z &'\.\-]+?)\s+vs\.?\s+([A-Z][A-Za-z &'\.\-]+?)", flags=re.I)
 
 
-def _clean_text(element):
+def _clean_text(element) -> str:
+    """Return cleaned text for a BeautifulSoup element.
+
+    Args:
+        element: BeautifulSoup node or None.
+
+    Returns:
+        str: Cleaned, whitespace-normalized text.
+    """
     return " ".join(element.stripped_strings) if element else ""
 
 
@@ -64,12 +72,24 @@ def _is_google_blocked(html: str) -> bool:
 
 
 def _create_session() -> requests.Session:
+    """Create an HTTP session preconfigured for Google search scraping.
+
+    Returns:
+        requests.Session: Configured requests session.
+    """
     session = requests.Session()
     session.headers.update(SEARCH_HEADERS)
     return session
 
 
 def fetch_google_search_html() -> str:
+    """Attempt to fetch Google search HTML for live cricket scores.
+
+    Tries a set of known search endpoints and returns the first usable HTML.
+
+    Returns:
+        str: HTML text if successful, otherwise empty string.
+    """
     session = _create_session()
     for url in SEARCH_URLS:
         try:
@@ -85,7 +105,7 @@ def fetch_google_search_html() -> str:
     return ""
 
 
-def _select_texts(node, selectors):
+def _select_texts(node, selectors) -> list[str]:
     values = []
     for selector in selectors:
         for element in node.select(selector):
